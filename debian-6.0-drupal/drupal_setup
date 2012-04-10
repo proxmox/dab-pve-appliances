@@ -1,0 +1,33 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          drupal_siteconfig
+# Required-Start:    $remote_fs mysql +mysql_randompw
+# Required-Stop:
+# X-Start-Before:    apache2
+# Default-Start:     2
+# Default-Stop:
+# Short-Description: Generate Drupal Siteconfig
+# Description:       Generate Drupal Siteconfig 
+### END INIT INFO
+
+set -e
+
+DOMAIN=`grep '^search' /etc/resolv.conf|awk '{ print $2; }'`
+HNAME=`head -n 1 /etc/hostname|awk '{ print $1; }'`
+
+if [ "X${HNAME}" = "Xlocalhost" ] ; then
+    exit 0;
+fi
+
+export DEBIAN_FRONTEND="noninteractive"
+export DEBCONF_NONINTERACTIVE_SEEN="true"
+
+# set HOME dir (for .my.cfg)
+export HOME=/root
+export USER=root
+
+dpkg  --force-confold --configure drupal6
+
+insserv -r drupal_setup
+rm -f /etc/init.d/drupal_setup
+

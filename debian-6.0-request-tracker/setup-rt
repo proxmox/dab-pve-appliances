@@ -1,0 +1,50 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          rt_siteconfig
+# Required-Start:    $remote_fs
+# Required-Stop:
+# X-Start-Before:    apache2
+# Default-Start:     2
+# Default-Stop:
+# Short-Description: Generate RT Siteconfig
+# Description:       Generate RT Siteconfig and gpg keys
+### END INIT INFO
+
+set -e
+
+DOMAIN=`grep '^search' /etc/resolv.conf|awk '{ print $2; }'`
+HNAME=`head -n 1 /etc/hostname|awk '{ print $1; }'`
+
+if [ "X${HNAME}" = "Xlocalhost" ] ; then
+    exit 0;
+fi
+
+FQDN=${HNAME}.${DOMAIN}
+
+cat  >/etc/request-tracker3.8/RT_SiteConfig.d/50-debconf <<EOF
+# THE BASICS:
+
+Set(\$rtname, '${FQDN}');
+Set(\$Organization, '${DOMAIN}');
+
+Set(\$CorrespondAddress , 'rt@${FQDN}');
+Set(\$CommentAddress , 'rt-comment@${FQDN}');
+
+# THE WEBSERVER:
+
+Set(\$WebPath , "/rt");
+Set(\$WebBaseURL , "http://${FQDN}");
+
+EOF
+
+cat  >/etc/request-tracker3.8/RT_SiteConfig.d/45-gnupg <<EOF
+# disable gnupg
+Set( %GnuPG, undef);
+Set(%GnuPGOptions, undef);
+1;
+EOF
+
+update-rt-siteconfig-3.8
+
+insserv -r setup-rt
+rm -f /etc/init.d/setup-rt

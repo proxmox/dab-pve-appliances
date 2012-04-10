@@ -1,0 +1,2 @@
+rt:         "|/usr/bin/rt-mailgate --queue General --action correspond --url 'http://localhost/rt'"
+rt-comment: "|/usr/bin/rt-mailgate --queue General --action comment --url 'http://localhost/rt'"

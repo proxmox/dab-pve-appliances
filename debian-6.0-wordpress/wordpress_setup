@@ -1,0 +1,110 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          wordpress_siteconfig
+# Required-Start:    $remote_fs mysql +mysql_randompw
+# Required-Stop:
+# X-Start-Before:    apache2
+# Default-Start:     2
+# Default-Stop:
+# Short-Description: Generate Wordpress Siteconfig
+# Description:       Generate Wordpress
+### END INIT INFO
+
+set -e
+
+DOMAIN=`grep '^search' /etc/resolv.conf|awk '{ print $2; }'`
+HNAME=`head -n 1 /etc/hostname|awk '{ print $1; }'`
+
+if [ "X${HNAME}" = "Xlocalhost" ] ; then
+    exit 0;
+fi
+
+echo "Generate Wordpress Siteconfig"
+
+# set HOME dir (for .my.cfg)
+export HOME=/root
+export USER=root
+
+PASSWD=`openssl rand -base64 9`
+
+mysql <<EOF
+# create the wordpress database user
+CREATE DATABASE wordpress;
+CREATE USER wordpress IDENTIFIED BY '${PASSWD}';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON wordpress.* TO 'wordpress'@'localhost' IDENTIFIED BY '${PASSWD}';
+FLUSH PRIVILEGES;
+QUIT
+EOF
+
+SKEY1=`openssl rand -base64 42`
+SKEY2=`openssl rand -base64 42`
+SKEY3=`openssl rand -base64 42`
+SKEY4=`openssl rand -base64 42`
+
+cat <<EOF > /var/www/wordpress/wp-config.php
+<?php
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'wordpress');
+
+/** MySQL database password */
+define('DB_PASSWORD', '${PASSWD}');
+
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
+
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+
+/**#@+
+ * Authentication Unique Keys.
+ *
+ * Change these to different unique phrases!
+ * You can generate these using the {@link http://api.wordpress.org/secret-key/1.1/ WordPress.org secret-key service}
+ *
+ * @since 2.6.0
+ */
+define('AUTH_KEY', '${SKEY1}');
+define('SECURE_AUTH_KEY', '${SKEY2}');
+define('LOGGED_IN_KEY', '${SKEY3}');
+define('NONCE_KEY', '${SKEY4}');
+/**#@-*/
+
+/**
+ * WordPress Database Table prefix.
+ *
+ * You can have multiple installations in one database if you give each a unique
+ * prefix. Only numbers, letters, and underscores please!
+ */
+\$table_prefix  = 'wp_';
+
+/**
+ * WordPress Localized Language, defaults to English.
+ *
+ * Change this to localize WordPress.  A corresponding MO file for the chosen
+ * language must be installed to wp-content/languages. For example, install
+ * de.mo to wp-content/languages and set WPLANG to 'de' to enable German
+ * language support.
+ */
+define ('WPLANG', '');
+
+/* That's all, stop editing! Happy blogging. */
+
+/** WordPress absolute path to the Wordpress directory. */
+if ( !defined('ABSPATH') )
+	define('ABSPATH', dirname(__FILE__) . '/');
+
+/** Sets up WordPress vars and included files. */
+require_once(ABSPATH . 'wp-settings.php');
+?>
+EOF
+
+insserv -r wordpress_setup
+rm -f /etc/init.d/wordpress_setup
+
