@@ -4,6 +4,7 @@ BASEDIR:=$(shell dab basedir)
 
 all: info/init_ok
 	dab bootstrap
+	dab install devuan-keyring
 	dab finalize
 
 info/init_ok: dab.conf
