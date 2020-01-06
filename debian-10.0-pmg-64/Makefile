@@ -31,5 +31,5 @@ dist-clean:
 
 .PHONY: ${CVD_FILES}
 ${CVD_FILES}:
-	curl -L --silent --show-error --fail  --time-cond $@ -o $@.tmp http://database.clamav.net/$@
+	curl -L --silent --show-error --fail --time-cond $@ -o $@.tmp http://database.clamav.net/$@
 	[ -f $@.tmp ] && mv $@.tmp $@ || true
