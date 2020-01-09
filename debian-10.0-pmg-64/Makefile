@@ -33,3 +33,4 @@ dist-clean:
 ${CVD_FILES}:
 	curl -L --silent --show-error --fail --time-cond $@ -o $@.tmp http://database.clamav.net/$@
 	[ -f $@.tmp ] && mv $@.tmp $@ || true
+	if command -v sigtool > /dev/null ; then sigtool -i $@; else echo "skipping verification of $@"; fi
