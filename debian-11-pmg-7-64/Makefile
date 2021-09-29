@@ -5,7 +5,6 @@ CVD_FILES:=main.cvd bytecode.cvd daily.cvd safebrowsing.cvd
 all: info/init_ok ${CVD_FILES}
 	dab bootstrap --minimal
 	sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' ${BASEDIR}/etc/ssh/sshd_config
-	dab exec /bin/systemctl enable systemd-timesyncd.service
 	touch ${BASEDIR}/proxmox_install_mode
 	dab install libdbi-perl perl-openssl-defaults libcgi-pm-perl proxmox-mailgateway-container gpg ifupdown2
 	rm ${BASEDIR}/proxmox_install_mode
