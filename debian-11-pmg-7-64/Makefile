@@ -20,16 +20,13 @@ info/init_ok: dab.conf
 .PHONY: clean
 clean:
 	dab clean
-	rm -f ${CVD_FILES}
 	rm -f *~
 
 .PHONY: dist-clean
-dist-clean:
+dist-clean: clean
 	dab dist-clean
 	rm -f ${CVD_FILES}
-	rm -f *~
 
-.PHONY: ${CVD_FILES}
 ${CVD_FILES}:
 	curl -L --silent --show-error --fail --time-cond $@ --user-agent "CVDUPDATE/0.3.0 (9d591f58-b430-4d0c-99b2-febb1cee0872)" -o $@.tmp https://database.clamav.net/$@
 	[ -f $@.tmp ] && mv $@.tmp $@ || true
