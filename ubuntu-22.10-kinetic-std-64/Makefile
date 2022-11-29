@@ -20,3 +20,7 @@ clean:
 dist-clean:
 	dab dist-clean
 	rm -f *~
+
+upload: TARGET=$(shell dab targetname)
+upload:
+	tar cf - $(TARGET).* | ssh repoman upload --type apl --dist bullseye
