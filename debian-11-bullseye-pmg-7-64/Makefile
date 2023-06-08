@@ -10,7 +10,7 @@ all: info/init_ok ${CVD_FILES}
 	rm ${BASEDIR}/proxmox_install_mode
 	sed -i '/^deb.*\.proxmox\.com\/.*$$/d;$${/^$$/d;}' ${BASEDIR}/etc/apt/sources.list
 	cp ${CVD_FILES} ${BASEDIR}/var/lib/clamav/
-	dab finalize
+	dab finalize --compressor zstd-max
 
 info/init_ok: dab.conf
 	dab init
