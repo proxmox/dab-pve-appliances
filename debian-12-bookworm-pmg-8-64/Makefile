@@ -9,7 +9,7 @@ all: info/init_ok ${CVD_FILES}
 	cp systemd-presets ${BASEDIR}/etc/systemd/system-preset/00-pve-template.preset
 	touch ${BASEDIR}/proxmox_install_mode
 	dab install libdbi-perl perl-openssl-defaults libcgi-pm-perl proxmox-mailgateway-container gpg ifupdown2
-	dab install antiword docx2txt odt2txt poppler-utils tesseract-ocr unrtf
+	dab install antiword docx2txt odt2txt poppler-utils tesseract-ocr unrtf libsasl2-modules
 	rm ${BASEDIR}/proxmox_install_mode
 	sed -i '/^deb.*\.proxmox\.com\/.*$$/d;$${/^$$/d;}' ${BASEDIR}/etc/apt/sources.list
 	cp ${CVD_FILES} ${BASEDIR}/var/lib/clamav/
