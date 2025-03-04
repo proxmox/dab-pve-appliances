@@ -10,6 +10,7 @@ all: info/init_ok ${CVD_FILES}
 	touch ${BASEDIR}/proxmox_install_mode
 	dab install \
 	    antiword \
+	    default-dbus-system-bus \
 	    docx2txt \
 	    gpg \
 	    ifupdown2 \
