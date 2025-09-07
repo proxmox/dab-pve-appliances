@@ -1,0 +1,9 @@
+*.tar
+*.tar.??
+*.tar.???
+*/config
+*/info/
+*/logfile
+*/rootfs/
+.veid
+/cache/
