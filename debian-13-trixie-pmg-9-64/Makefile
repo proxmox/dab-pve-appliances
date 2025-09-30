@@ -8,6 +8,7 @@ all: info/init_ok ${CVD_FILES}
 	mkdir -p ${BASEDIR}/etc/systemd/system-preset
 	cp systemd-presets ${BASEDIR}/etc/systemd/system-preset/00-pve-template.preset
 	touch ${BASEDIR}/proxmox_install_mode
+	dab exec apt purge -y ifupdown
 	dab install \
 	    antiword \
 	    dbus \
