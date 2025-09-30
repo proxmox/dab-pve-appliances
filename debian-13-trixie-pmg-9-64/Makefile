@@ -26,7 +26,6 @@ all: info/init_ok ${CVD_FILES}
 	    unrtf \
 	    ;
 	rm ${BASEDIR}/proxmox_install_mode
-	sed -i '/^deb.*\.proxmox\.com\/.*$$/d;$${/^$$/d;}' ${BASEDIR}/etc/apt/sources.list
 	cp ${CVD_FILES} ${BASEDIR}/var/lib/clamav/
 	dab finalize --compressor zstd-max
 
