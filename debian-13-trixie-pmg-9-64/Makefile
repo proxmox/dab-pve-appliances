@@ -13,7 +13,7 @@ all: info/init_ok ${CVD_FILES}
 	    antiword \
 	    dbus \
 	    docx2txt \
-	    gpg \
+	    gnupg \
 	    ifupdown2 \
 	    libcgi-pm-perl \
 	    libdbi-perl \
