@@ -1,0 +1,5 @@
+disable clamav-clamonacc.service
+disable pg_basebackup@.timer
+disable pg_basebackup@.timer
+disable pg_dump@.timer
+disable pg_receivewal@.service
