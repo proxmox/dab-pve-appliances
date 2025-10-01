@@ -15,6 +15,7 @@ all: info/init_ok ${CVD_FILES}
 	    docx2txt \
 	    gnupg \
 	    ifupdown2 \
+	    isc-dhcp-client \
 	    libcgi-pm-perl \
 	    libdbi-perl \
 	    libsasl2-modules \
